@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#6c63ff" />
+  <title>HAND CODE ADVENTURE — ภารกิจมือพิชิตอัลกอริทึม</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="portraitOverlay" class="portrait-overlay hidden">
+    <div class="portrait-card">📱 กรุณาหมุนอุปกรณ์เป็นแนวนอนเพื่อเล่นเกม</div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🤖</div>
+      <div>
+        <div class="brand-title">HAND CODE ADVENTURE</div>
+        <div class="brand-subtitle">ภารกิจมือพิชิตอัลกอริทึม</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span id="playerBadge" class="badge">ผู้เล่น: ผู้เล่น</span>
+      <button id="soundBtn" class="icon-btn" title="เปิด/ปิดเสียง">🔊</button>
+      <button id="testModeBtn" class="icon-btn" title="Developer Test Mode">🛠️</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- MENU -->
+    <section id="screenMenu" class="screen active">
+      <div class="hero-card">
+        <div class="hero-robot">🤖⭐</div>
+        <h1>HAND CODE ADVENTURE</h1>
+        <p class="lead">ใช้มือสร้างคำสั่ง แล้วพา Robot ไปหาเป้าหมาย</p>
+        <div class="name-row">
+          <label for="playerName">ชื่อผู้เล่น</label>
+          <input id="playerName" maxlength="24" placeholder="พิมพ์ชื่อของคุณ" />
+        </div>
+        <div class="menu-buttons">
+          <button id="startBtn" class="primary big-btn">🎮 เริ่มเล่น</button>
+          <button id="howBtn" class="secondary big-btn">📘 วิธีเล่น</button>
+          <button id="teacherBtn" class="secondary big-btn">👩‍🏫 โหมดครู</button>
+          <button id="settingsBtn" class="secondary big-btn">⚙️ ตั้งค่า</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW TO PLAY -->
+    <section id="screenHow" class="screen">
+      <div class="panel wide-panel">
+        <div class="section-head"><h2>📘 วิธีเล่น</h2><button class="icon-btn backBtn">←</button></div>
+        <div class="tutorial-grid">
+          <div class="info-card"><strong>1. สร้างคำสั่ง</strong><p>เลือก MOVE, RIGHT, LEFT หรือ STOP เพื่อสร้าง Program</p></div>
+          <div class="info-card"><strong>2. ใช้ Loop / IF</strong><p>ใช้ REPEAT หรือเงื่อนไขสีในด่านที่กำหนด</p></div>
+          <div class="info-card"><strong>3. กด RUN</strong><p>Robot จะทำตามคำสั่งที่สร้างไว้</p></div>
+          <div class="info-card"><strong>4. ผิดก็แก้ได้</strong><p>ถ้ายังไม่ถึง Goal ให้ดู Hint/Debug แล้วลองใหม่</p></div>
+        </div>
+        <div class="gesture-table">
+          <div>☝️</div><div><b>MOVE</b></div><div>เดินไปข้างหน้า</div>
+          <div>✌️</div><div><b>RIGHT</b></div><div>เลี้ยวขวา</div>
+          <div>🤟</div><div><b>LEFT</b></div><div>เลี้ยวซ้าย</div>
+          <div>✊</div><div><b>STOP</b></div><div>หยุด</div>
+          <div>👍</div><div><b>RUN</b></div><div>เริ่มทำตาม Algorithm</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL SELECT -->
+    <section id="screenLevels" class="screen">
+      <div class="panel wide-panel">
+        <div class="section-head"><div><h2>🗺️ เลือกภารกิจ</h2><p id="progressSummary">0/10 ด่าน</p></div><button class="icon-btn backToMenuBtn">⌂</button></div>
+        <div id="levelGrid" class="level-grid"></div>
+      </div>
+    </section>
+
+    <!-- TUTORIAL/CAMERA SETUP -->
+    <section id="screenSetup" class="screen">
+      <div class="panel setup-panel">
+        <div class="section-head"><h2>📷 เตรียมตัวก่อนเล่น</h2></div>
+        <div class="setup-grid">
+          <div>
+            <video id="setupVideo" autoplay playsinline muted></video>
+            <div class="camera-status-row"><span id="setupCameraStatus" class="status-chip">Camera: OFF</span><span id="setupHandStatus" class="status-chip">Hand Detection: OFF</span></div>
+          </div>
+          <div class="setup-info">
+            <h3>ลองทำท่ามือทีละท่า</h3>
+            <div id="calibrationGuide" class="calibration-guide">กด “เปิดกล้อง” เพื่อเริ่ม</div>
+            <div class="calibration-progress"><div id="calibrationFill" class="calibration-fill"></div></div>
+            <div id="calibrationResult" class="calibration-result">ยังไม่ได้เริ่ม</div>
+            <div class="setup-actions"><button id="cameraOpenBtn" class="primary">📷 เปิดกล้อง</button><button id="cameraCloseBtn" class="secondary">ปิดกล้อง</button><button id="cameraRetryBtn" class="secondary">ลองใหม่</button></div>
+            <div id="setupError" class="message error hidden"></div>
+            <button id="continueBtn" class="primary big-btn" disabled>ไปด่าน 1 ➜</button>
+            <div class="fallback-note">ไม่ใช้กล้องก็ได้: เกมมีปุ่ม Mouse/Touch และ Keyboard สำรอง</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAMEPLAY -->
+    <section id="screenGame" class="screen">
+      <div class="game-shell">
+        <div class="game-header panel">
+          <div><div id="levelTitle" class="level-title">ด่าน</div><div id="levelObjective" class="level-objective"></div></div>
+          <div class="stats"><span id="scoreStat">⭐ 0</span><span id="coinStat">🪙 0</span><span id="timerStat">⏱️ 00:00</span></div>
+          <div class="header-actions"><button id="backLevelsBtn" class="icon-btn">🗺️</button><button id="resetLevelBtn" class="icon-btn">↻</button></div>
+        </div>
+
+        <div class="game-main">
+          <div class="world-column">
+            <div class="panel world-panel">
+              <canvas id="gameCanvas" width="900" height="560"></canvas>
+            </div>
+            <div class="panel program-panel">
+              <div class="program-head"><div><b>🧠 Algorithm ของฉัน</b><span id="commandCount">0 คำสั่ง</span></div><div class="program-actions"><button id="undoBtn" class="small-btn">↩ Undo</button><button id="clearBtn" class="small-btn">🗑 Clear</button></div></div>
+              <div id="programQueue" class="program-queue"></div>
+              <div class="command-buttons">
+                <button data-cmd="MOVE" class="command-btn gesture-move">☝️ MOVE</button>
+                <button data-cmd="RIGHT" class="command-btn gesture-right">✌️ RIGHT</button>
+                <button data-cmd="LEFT" class="command-btn gesture-left">🤟 LEFT</button>
+                <button data-cmd="STOP" class="command-btn gesture-stop">✊ STOP</button>
+                <button data-cmd="REPEAT2" class="command-btn logic-btn">🔁 REPEAT ×2</button>
+                <button data-cmd="REPEAT3" class="command-btn logic-btn">🔁 REPEAT ×3</button>
+                <button data-cmd="IF_RED_LEFT" class="command-btn logic-btn">🔴 IF RED → LEFT</button>
+                <button data-cmd="IF_BLUE_RIGHT" class="command-btn logic-btn">🔵 IF BLUE → RIGHT</button>
+                <button id="runBtn" class="command-btn run-btn">👍 RUN</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="side-column">
+            <div class="panel camera-panel">
+              <div class="panel-head"><b>📷 Camera / Gesture</b><button id="cameraTestBtn" class="small-btn">ทดสอบ</button></div>
+              <div class="video-wrap"><video id="gameVideo" autoplay playsinline muted></video><canvas id="handOverlay" width="640" height="480"></canvas></div>
+              <div class="detected-box"><div><span>Detected:</span> <b id="gestureLabel">กำลังรอมือ...</b></div><div><span>Confidence:</span> <b id="gestureConfidence">0%</b></div><div><span>Status:</span> <b id="gestureStatus">ยังไม่พร้อม</b></div></div>
+            </div>
+            <div class="panel debug-panel"><div class="panel-head"><b>🔎 Debug</b><button id="hintBtn" class="small-btn">💡 Hint</button></div><div id="debugBox" class="debug-box">สร้างคำสั่งแล้วกด RUN ได้เลย</div></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section id="screenResult" class="screen">
+      <div class="result-card">
+        <div id="resultEmoji" class="result-emoji">🎉</div>
+        <h2 id="resultTitle">ภารกิจสำเร็จ!</h2>
+        <p id="resultMessage">Robot ถึงเป้าหมายแล้ว</p>
+        <div class="result-stats"><div>คะแนน <b id="resultScore">0</b></div><div>ดาว <b id="resultStars">0</b></div><div>เหรียญ <b id="resultCoins">0</b></div><div>คำสั่ง <b id="resultCommands">0</b></div></div>
+        <div class="result-actions"><button id="nextLevelBtn" class="primary big-btn">➡️ ด่านถัดไป</button><button id="retryResultBtn" class="secondary big-btn">🔁 เล่นอีกครั้ง</button><button id="resultLevelsBtn" class="secondary big-btn">🗺️ เลือกด่าน</button></div>
+      </div>
+    </section>
+
+    <!-- TEACHER -->
+    <section id="screenTeacher" class="screen">
+      <div class="panel wide-panel">
+        <div class="section-head"><h2>👩‍🏫 โหมดครู</h2><button class="icon-btn backToMenuBtn">⌂</button></div>
+        <div class="teacher-grid">
+          <div class="info-card"><h3>ข้อมูลผู้เล่น</h3><p id="teacherStats">-</p><button id="downloadProgressBtn" class="secondary">⬇️ ดาวน์โหลด Progress JSON</button><button id="resetProgressBtn" class="danger">ล้าง Progress</button></div>
+          <div class="info-card"><h3>สร้างด่านอย่างง่าย</h3><label>ชื่อด่าน<input id="customTitle" placeholder="ด่านของฉัน" /></label><label>โจทย์<input id="customObjective" placeholder="พา Robot ไปหา Goal" /></label><label>แนวคิด<select id="customConcept"><option value="sequence">Sequence</option><option value="loop">Loop</option><option value="if">IF</option><option value="debug">Debug</option></select></label><button id="saveCustomBtn" class="primary">บันทึกด่านตัวอย่าง</button><div id="customMsg" class="message hidden"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="screenSettings" class="screen">
+      <div class="panel narrow-panel"><div class="section-head"><h2>⚙️ ตั้งค่า</h2><button class="icon-btn backBtn">←</button></div>
+        <label class="setting-row"><span>เสียง</span><input id="soundToggle" type="checkbox" checked /></label>
+        <label class="setting-row"><span>แสดง Hand Cursor</span><input id="cursorToggle" type="checkbox" checked /></label>
+        <label class="setting-row"><span>Reduced Motion</span><input id="motionToggle" type="checkbox" /></label>
+        <div class="share-box"><h3>🔗 Share Game</h3><div id="shareUrl"></div><button id="copyLinkBtn" class="secondary">Copy Link</button></div>
+      </div>
+    </section>
+
+    <!-- TEST MODE -->
+    <aside id="testPanel" class="test-panel hidden">
+      <div class="test-head"><b>F9 TEST MODE</b><button id="closeTestBtn">×</button></div>
+      <pre id="testOutput">Waiting...</pre>
+      <div class="test-actions"><button id="forceSuccessBtn">Force Success</button><button id="testResetLevelBtn">Reset Level</button><button id="resetCameraBtn">Reset Camera</button><button id="testClearStorageBtn">Clear Storage</button></div>
+    </aside>
+  </main>
+
+  <!-- MediaPipe Hands (pinned version). If it fails, fallback controls remain available. -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.min.js"></script>
+  <script src="levels.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
